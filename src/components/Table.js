@@ -6,62 +6,10 @@ import {
 } from 'react-bootstrap';
 
 export default class CustomTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { showModal: false };
-        this.close = this.close.bind(this);
-        this.open = this.open.bind(this);
-    }
-
-    getInitialState = () => {
-        return { showModal: false };
-    };
-
-    close = () => {
-        this.setState({ showModal: false });
-    };
-
-    open = () => {
-        this.setState({ showModal: true });
-    };
-
-    delete = () => {
-        this.setState({ showModal: true });
-    };
 
     render() {
-        var data = [{
-            id: 1,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 1,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 1,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 1,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        }];
         return (
             <div>
-                <PageHeader>
-                    Example page header
-                    <Button
-                        bsStyle="success"
-                        onClick={this.open}
-                    >
-                        Add
-                    </Button>
-                </PageHeader>
                 <Table responsive>
                     <thead>
                     <tr>
@@ -73,9 +21,9 @@ export default class CustomTable extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.map(function(object) {
+                    {this.props.list.map(function(object) {
                         return  (
-                            <tr>
+                            <tr key={object.id}>
                                 <td>{object.id}</td>
                                 <td>{object.name}</td>
                                 <td>{object.email}</td>
@@ -85,14 +33,14 @@ export default class CustomTable extends React.Component {
                                         <Button
                                             bsStyle="primary"
                                             bsSize="xsmall"
-                                            onClick={this.open}
+                                            onClick={() => this.props.onEdit(object)}
                                         >
                                             Edit
                                         </Button>
                                         <Button
                                             bsStyle="danger"
                                             bsSize="xsmall"
-                                            onClick={this.delete}
+                                            onClick={() => this.props.onDelete(object)}
                                         >
                                             Delete
                                         </Button>
