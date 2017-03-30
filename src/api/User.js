@@ -1,38 +1,33 @@
 export default class UserApi {
-    static getList() {
-        return [{
-            id: 1,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 2,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 3,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        },{
-            id: 4,
-            name : 'test',
-            email: 'test2',
-            company: 'test3'
-        }];
+    static getList(page) {
+        return fetch('http://localhost:8201/api/v1/users?page='+page, {
+            method: 'GET',
+            mode: 'cors',
+        }).then((response) => {
+            console.log(response);
+            console.log(response.headers.get('X-Pagination-Page-Count'));
+            return response.json().then((data) => {
+                return {
+                    pages: +response.headers.get('X-Pagination-Page-Count'),
+                    data: data
+                }
+            })
+        }).then((data) => {
+            console.log(data);
+            return data;
+        });
     }
 
     static create(data) {
         let formData = new FormData();
-        console.log(data);
+
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 formData.append(key, data[key]);
             }
         }
 
-        fetch('http://localhost:8201/api/v1/users', {
+        return fetch('http://localhost:8201/api/v1/users', {
             method: 'POST',
             mode: 'cors',
             body: formData
@@ -45,7 +40,15 @@ export default class UserApi {
     }
 
     static remove(id) {
-
+        return fetch('http://localhost:8201/api/v1/users/'+id, {
+            method: 'DELETE',
+            mode: 'cors',
+        }).then((response) => {
+            return response.json()
+        }).then((data) => {
+            console.log(data);
+            return data.id;
+        });
     }
 
     static update(id) {

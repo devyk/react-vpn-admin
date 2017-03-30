@@ -18,7 +18,9 @@ export default class UserPage extends React.Component {
         super(props);
         this.state = {
             showModal: false,
-            page: 1
+            page: 1,
+            pageCount: 0,
+            list: []
         };
     }
 
@@ -33,12 +35,30 @@ export default class UserPage extends React.Component {
         });
     };
 
+    componentWillMount = () => {
+        UserApi.getList(1).then((data) => {
+            this.setState({
+                pageCount: data.pages,
+                list: data.data
+            });
+        });
+    };
+
     delete = () => {
         this.setState({ showModal: true });
     };
 
     onSave = (data) => {
-        UserApi.create(data);
+        UserApi.create(data).then(() => {
+            console.log(1111);
+            this.close();
+            UserApi.getList(this.state.page).then((data) => {
+                this.setState({
+                    pageCount: data.pages,
+                    list: data.data
+                });
+            });
+        })
     };
 
     /**
@@ -46,8 +66,12 @@ export default class UserPage extends React.Component {
      * @param next
      */
     pageChange = (next) => {
-        this.setState({
-            page: next
+        UserApi.getList(next).then((data) => {
+            this.setState({
+                pageCount: data.pages,
+                list: data.data,
+                page: next
+            });
         });
     };
 
@@ -64,12 +88,12 @@ export default class UserPage extends React.Component {
                     </Button>
                 </PageHeader>
                 <CustomTable
-                    list={UserApi.getList()}
+                    list={this.state.list}
                     onEdit={this.open}
                     onDelete={this.delete}/>
                 <Pagination
                     bsSize="medium"
-                    items={10}
+                    items={this.state.pageCount}
                     activePage={this.state.page}
                     onSelect={this.pageChange}/>
                 <UserForm
