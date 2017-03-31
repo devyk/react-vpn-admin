@@ -19,30 +19,37 @@ export default class CompanyApi {
     }
 
     static create(data) {
-        let formData = new FormData();
-
-        for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-                formData.append(key, data[key]);
-            }
-        }
-
-        fetch('http://localhost:8201/api/v1/users', {
+        return fetch('http://localhost:8201/api/v1/companies', {
             method: 'POST',
             mode: 'cors',
-            body: formData
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }).then((response) => {
             return response.json()
-        }).then((data) => {
-            return data.id;
         });
     }
 
     static remove(id) {
-
+        return fetch('http://localhost:8201/api/v1/companies/'+id, {
+            method: 'DELETE',
+            mode: 'cors',
+        }).then((response) => {
+            return response
+        });
     }
 
-    static update(id) {
-
+    static update(id, data) {
+        return fetch('http://localhost:8201/api/v1/companies/'+id, {
+            method: 'PUT',
+            mode: 'cors',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            return response.json()
+        });
     }
 }

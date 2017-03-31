@@ -44,9 +44,9 @@ export default class CustomTable extends React.Component {
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Company</th>
+                        {this.props.headers.map((key, index) => {
+                            return (<th key={index}>{key.title}</th>);
+                        })}
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -55,9 +55,9 @@ export default class CustomTable extends React.Component {
                         return  (
                             <tr key={object.id}>
                                 <td>{object.id}</td>
-                                <td>{object.name}</td>
-                                <td>{object.email}</td>
-                                <td>{object.company}</td>
+                                {this.props.headers.map((key, index) => {
+                                    return (<td key={index}>{object[key.index]}</td>);
+                                })}
                                 <td>
                                     <ButtonGroup>
                                         <Button

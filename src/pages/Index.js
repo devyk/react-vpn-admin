@@ -6,9 +6,10 @@ import {
     Col,
     Nav,
     NavItem,
-    PageHeader,
 } from 'react-bootstrap';
+
 import UserPage from './User';
+import CompanyPage from './Company';
 
 export default class LoginPage extends React.Component {
   render() {
@@ -34,7 +35,7 @@ export default class LoginPage extends React.Component {
                             <UserPage/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="second">
-                            <PageHeader>Example page header <small>Subtext for header</small></PageHeader>
+                            <CompanyPage/>
                         </Tab.Pane>
                     </Tab.Content>
                 </Col>

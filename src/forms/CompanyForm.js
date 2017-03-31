@@ -5,14 +5,16 @@ import {
     FormControl,
     Modal,
     Button,
-    HelpBlock
+    HelpBlock,
+    InputGroup,
+    Glyphicon
 } from 'react-bootstrap';
 
 import Joi from 'joi';
 import validation from 'react-validation-mixin';
 import strategy from 'joi-validation-strategy';
 
-class UserForm extends React.Component {
+class CompanyForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -32,7 +34,7 @@ class UserForm extends React.Component {
          */
         this.validatorTypes = {
             name: Joi.string().alphanum().min(3).max(30).required().label('Name'),
-            email: Joi.string().email().required().label('Email')
+            quota: Joi.number().integer().min(1)
         };
     }
 
@@ -54,10 +56,9 @@ class UserForm extends React.Component {
      * @returns {{}}
      */
     getValidatorData = () => {
-        console.log('this.state.data.email', this.state.data.email);
         return {
             name: this.state.data.name,
-            email: this.state.data.email
+            quota: this.state.data.quota
         };
     };
 
@@ -120,28 +121,20 @@ class UserForm extends React.Component {
                                          placeholder="Enter text"/>
                             {this.renderErrorText('name')}
                         </FormGroup>
-                        <FormGroup validationState={this.isValid('email')}>
-                            <ControlLabel>Email</ControlLabel>
-                            <FormControl id="email"
-                                         type="email"
-                                         label="email"
-                                         value={this.state.data ? this.state.data.email : ''}
-                                         onChange={this.onChange}
-                                         placeholder="Enter text"/>
-                            {this.renderErrorText('email')}
-                        </FormGroup>
-                        <FormGroup  validationState={'success'}>
-                            <ControlLabel>Company</ControlLabel>
-                            <FormControl id="company_id"
-                                         componentClass="select"
-                                         placeholder="select"
-                                         defaultValue={this.state.data.company_id}
-                                         onChange={this.onChange}
-                            >
-                                {this.props.companies.map((object) => {
-                                    return <option key={object.id} value={object.id}>{object.name}</option>
-                                })}
-                            </FormControl>
+                        <FormGroup validationState={this.isValid('quota')}>
+                            <ControlLabel>Quota</ControlLabel>
+                            <InputGroup>
+                                <FormControl id="quota"
+                                             type="text"
+                                             label="quota"
+                                             value={this.state.data ? this.state.data.quota : ''}
+                                             onChange={this.onChange}
+                                             placeholder="Enter company quota"/>
+                                <InputGroup.Addon>
+                                    <Glyphicon glyph="fire" />
+                                </InputGroup.Addon>
+                            </InputGroup>
+                            {this.renderErrorText('quota')}
                         </FormGroup>
                     </form>
                 </Modal.Body>
@@ -163,4 +156,4 @@ class UserForm extends React.Component {
     }
 }
 
-export default validation(strategy)(UserForm);
+export default validation(strategy)(CompanyForm);
