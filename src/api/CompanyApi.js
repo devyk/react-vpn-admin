@@ -1,22 +1,21 @@
 export default class CompanyApi {
-    static getList() {
-        return [{
-            id: 1,
-            name : 'test',
-            quota: 'test2',
-        },{
-            id: 2,
-            name : 'test',
-            quota: 'test2',
-        },{
-            id: 3,
-            name : 'test',
-            quota: 'test2',
-        },{
-            id: 4,
-            name : 'test',
-            quota: 'test2',
-        }];
+    static getList(page) {
+        let endpoint = 'http://localhost:8201/api/v1/companies';
+        if (page) {
+            endpoint += '?page='+page;
+        }
+
+        return fetch(endpoint, {
+            method: 'GET',
+            mode: 'cors',
+        }).then((response) => {
+            return response.json().then((data) => {
+                return {
+                    pages: +response.headers.get('X-Pagination-Page-Count'),
+                    data: data
+                }
+            })
+        });
     }
 
     static create(data) {

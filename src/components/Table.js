@@ -7,6 +7,36 @@ import {
 
 export default class CustomTable extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {deleting: false};
+    }
+
+    /**
+     * Calls delete from parent component and
+     * set deleting state for specified object.
+     * @param object
+     */
+    onDelete = (object) => {
+        this.setState({
+            deleting : object.id
+        });
+        this.props.onDelete(object).then(() => {
+            this.setState({
+                deleting : false
+            });
+        })
+    };
+
+    /**
+     * Returns true if current object is going to be deleted.
+     * @param object
+     * @returns {boolean}
+     */
+    isDeletingState = (object) => {
+        return this.state.deleting === object.id
+    };
+
     render() {
         return (
             <div>
@@ -40,9 +70,9 @@ export default class CustomTable extends React.Component {
                                         <Button
                                             bsStyle="danger"
                                             bsSize="xsmall"
-                                            onClick={() => this.props.onDelete(object)}
+                                            onClick={() => this.onDelete(object)}
                                         >
-                                            Delete
+                                            {this.isDeletingState(object) ? '...' : 'Delete'}
                                         </Button>
                                     </ButtonGroup>
                                 </td>

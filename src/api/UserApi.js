@@ -4,38 +4,25 @@ export default class UserApi {
             method: 'GET',
             mode: 'cors',
         }).then((response) => {
-            console.log(response);
-            console.log(response.headers.get('X-Pagination-Page-Count'));
             return response.json().then((data) => {
                 return {
                     pages: +response.headers.get('X-Pagination-Page-Count'),
                     data: data
                 }
             })
-        }).then((data) => {
-            console.log(data);
-            return data;
         });
     }
 
     static create(data) {
-        let formData = new FormData();
-
-        for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-                formData.append(key, data[key]);
-            }
-        }
-
         return fetch('http://localhost:8201/api/v1/users', {
             method: 'POST',
             mode: 'cors',
-            body: formData
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }).then((response) => {
             return response.json()
-        }).then((data) => {
-            console.log(data);
-            return data.id;
         });
     }
 
@@ -44,14 +31,20 @@ export default class UserApi {
             method: 'DELETE',
             mode: 'cors',
         }).then((response) => {
-            return response.json()
-        }).then((data) => {
-            console.log(data);
-            return data.id;
+            return response
         });
     }
 
-    static update(id) {
-
+    static update(id, data) {
+        return fetch('http://localhost:8201/api/v1/users/'+id, {
+            method: 'PUT',
+            mode: 'cors',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            return response.json()
+        });
     }
 }

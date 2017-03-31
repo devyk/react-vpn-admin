@@ -9,7 +9,7 @@ import {
     FormControl
 } from 'react-bootstrap';
 import CustomTable from '../components/Table';
-import UserApi from './../api/User';
+import UserApi from '../api/UserApi';
 import CompanyApi from './../api/CompanyApi';
 import UserForm from './../forms/UserForm';
 
@@ -20,7 +20,8 @@ export default class UserPage extends React.Component {
             showModal: false,
             page: 1,
             pageCount: 0,
-            list: []
+            list: [],
+            companies: []
         };
     }
 
@@ -37,29 +38,53 @@ export default class UserPage extends React.Component {
 
     componentWillMount = () => {
         UserApi.getList(1).then((data) => {
-            this.setState({
-                pageCount: data.pages,
-                list: data.data
+            CompanyApi.getList().then((companies) => {
+                console.log(companies);
+                this.setState({
+                    pageCount: data.pages,
+                    list: data.data,
+                    companies: companies.data
+                });
             });
         });
     };
 
-    delete = () => {
-        this.setState({ showModal: true });
-    };
-
-    onSave = (data) => {
-        UserApi.create(data).then(() => {
-            console.log(1111);
-            this.close();
+    delete = (data) => {
+        return UserApi.remove(data.id).then(() => {
             UserApi.getList(this.state.page).then((data) => {
                 this.setState({
                     pageCount: data.pages,
                     list: data.data
                 });
+                this.close();
+            });
+        });
+    };
+
+    onSave = (data) => {
+
+        if (data.id) {
+            return UserApi.update(data.id, data).then((response) => {
+                return UserApi.getList(this.state.page).then((data) => {
+                    this.setState({
+                        pageCount: data.pages,
+                        list: data.data
+                    });
+                    this.close();
+                });
+            });
+        }
+        return UserApi.create(data).then(() => {
+            return UserApi.getList(this.state.page).then((data) => {
+                this.setState({
+                    pageCount: data.pages,
+                    list: data.data
+                });
+                this.close();
             });
         })
     };
+
 
     /**
      * Sets next page
@@ -101,7 +126,7 @@ export default class UserPage extends React.Component {
                     onHide={this.close}
                     onSave={this.onSave}
                     data={this.state.entity}
-                    companies={CompanyApi.getList()}
+                    companies={this.state.companies}
                 />
             </div>
         )

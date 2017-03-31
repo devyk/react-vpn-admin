@@ -12,7 +12,8 @@ export default class UserForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null
+            data: false,
+            save : false
         };
     }
 
@@ -35,10 +36,16 @@ export default class UserForm extends React.Component {
     };
 
     onSave = () => {
-        console.log(this.state);
         if (this.props.onSave) {
-            this.props.onSave(this.state.data);
+            this.setState({ save : true });
+            this.props.onSave(this.state.data).then(() => {
+                this.setState({ save : false });
+            });
         }
+    };
+
+    isLoading = () => {
+        return this.state.save;
     };
 
     render() {
@@ -66,11 +73,12 @@ export default class UserForm extends React.Component {
                                          placeholder="Enter text"/>
                             <ControlLabel>Company</ControlLabel>
                             <FormControl id="company_id"
-                                componentClass="select"
-                                placeholder="select"
-                                onChange={this.onChange}
+                                         componentClass="select"
+                                         placeholder="select"
+                                         defaultValue={this.state.data ? this.state.data.company_id : 1}
+                                         onChange={this.onChange}
                             >
-                                {this.props.companies.map(function(object) {
+                                {this.props.companies.map((object) => {
                                     return <option key={object.id} value={object.id}>{object.name}</option>
                                 })}
                             </FormControl>
@@ -78,8 +86,17 @@ export default class UserForm extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.props.onHide}>Close</Button>
-                    <Button bsStyle="success" onClick={this.onSave}>Save</Button>
+                    <Button onClick={this.props.onHide}
+                            disabled={this.isLoading()}
+                    >
+                        Close
+                    </Button>
+                    <Button bsStyle="success"
+                            onClick={this.onSave}
+                            disabled={this.isLoading()}
+                    >
+                        {this.isLoading() ? '...' : 'Save'}
+                    </Button>
                 </Modal.Footer>
             </Modal>
         );
