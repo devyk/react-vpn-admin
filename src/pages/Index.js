@@ -10,32 +10,36 @@ import {
 
 import UserPage from './User';
 import CompanyPage from './Company';
+import AbuserPage from './Abuser';
 
 export default class LoginPage extends React.Component {
   render() {
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+        <Tab.Container id="left-tabs-example" defaultActiveKey="company">
             <Row className="clearfix">
                 <Col sm={2}>
                     <Nav bsStyle="pills" stacked>
-                        <NavItem eventKey="first">
+                        <NavItem eventKey="user">
                             Users
                         </NavItem>
-                        <NavItem eventKey="second">
+                        <NavItem eventKey="company">
                             Companies
                         </NavItem>
-                        <NavItem eventKey="third">
+                        <NavItem eventKey="abuser">
                             Abusers
                         </NavItem>
                     </Nav>
                 </Col>
                 <Col sm={10}>
                     <Tab.Content animation>
-                        <Tab.Pane eventKey="first">
+                        <Tab.Pane eventKey="user">
                             <UserPage/>
                         </Tab.Pane>
-                        <Tab.Pane eventKey="second">
+                        <Tab.Pane eventKey="company">
                             <CompanyPage/>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="abuser">
+                            <AbuserPage/>
                         </Tab.Pane>
                     </Tab.Content>
                 </Col>

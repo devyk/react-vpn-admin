@@ -108,33 +108,36 @@ export default class UserPage extends React.Component {
                         Add
                     </Button>
                 </PageHeader>
-                <CustomTable
-                    list={this.state.list}
-                    onEdit={this.open}
-                    onDelete={this.delete}
-                    headers={[{
-                        title : 'Name',
-                        index : 'name'
-                    }, {
-                        title : 'Email',
-                        index : 'email'
-                    }, {
-                        title : 'Company',
-                        index : 'company_id'
-                    }]}
-                />
-                <Pagination
-                    bsSize="medium"
-                    items={this.state.pageCount}
-                    activePage={this.state.page}
-                    onSelect={this.pageChange}/>
-                <UserForm
-                    show={this.state.showModal}
-                    onHide={this.close}
-                    onSave={this.onSave}
-                    data={this.state.entity}
-                    companies={this.state.companies}
-                />
+                {
+                    !!this.state.list.length && (<div>
+                        <CustomTable
+                            list={this.state.list}
+                            onEdit={this.open}
+                            onDelete={this.delete}
+                            headers={[{
+                                title : 'Name',
+                                index : 'name'
+                            }, {
+                                title : 'Email',
+                                index : 'email'
+                            }, {
+                                title : 'Company',
+                                index : 'company_id'
+                            }]}/>
+                        <Pagination
+                            bsSize="medium"
+                            items={this.state.pageCount}
+                            activePage={this.state.page}
+                            onSelect={this.pageChange}/>
+                        <UserForm
+                            show={this.state.showModal}
+                            onHide={this.close}
+                            onSave={this.onSave}
+                            data={this.state.entity}
+                            companies={this.state.companies}
+                        />
+                    </div>)
+                }
             </div>
         )
     }

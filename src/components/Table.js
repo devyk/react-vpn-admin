@@ -18,13 +18,9 @@ export default class CustomTable extends React.Component {
      * @param object
      */
     onDelete = (object) => {
-        this.setState({
-            deleting : object.id
-        });
+        this.setState({deleting : object.id});
         this.props.onDelete(object).then(() => {
-            this.setState({
-                deleting : false
-            });
+            this.setState({deleting : false});
         })
     };
 
@@ -37,6 +33,26 @@ export default class CustomTable extends React.Component {
         return this.state.deleting === object.id
     };
 
+    /**
+     * Returns true if action coulumn should be displayed.
+     * @returns {boolean}
+     */
+    isActionsColumnVisible = () => {
+        return this.props.onEdit || this.props.onDelete;
+    };
+
+    /**
+     * Returns rendered representation of the column value.
+     * @param key
+     * @param object
+     * @returns {*}
+     */
+    renderColumnIndex = (key, object) => {
+        return key.render
+            ? key.render(object[key.index])
+            : object[key.index];
+    };
+
     render() {
         return (
             <div>
@@ -47,38 +63,54 @@ export default class CustomTable extends React.Component {
                         {this.props.headers.map((key, index) => {
                             return (<th key={index}>{key.title}</th>);
                         })}
-                        <th>Actions</th>
+                        {
+                            this.isActionsColumnVisible() && (
+                                <th>Actions</th>
+                            )
+                        }
                     </tr>
                     </thead>
                     <tbody>
-                    {this.props.list.map(function(object) {
+                    {this.props.list.map((object) => {
                         return  (
                             <tr key={object.id}>
                                 <td>{object.id}</td>
                                 {this.props.headers.map((key, index) => {
-                                    return (<td key={index}>{object[key.index]}</td>);
+                                    return (
+                                        <td key={index}>
+                                            {this.renderColumnIndex(key, object)}
+                                        </td>
+                                    );
                                 })}
                                 <td>
                                     <ButtonGroup>
-                                        <Button
-                                            bsStyle="primary"
-                                            bsSize="xsmall"
-                                            onClick={() => this.props.onEdit(object)}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            bsStyle="danger"
-                                            bsSize="xsmall"
-                                            onClick={() => this.onDelete(object)}
-                                        >
-                                            {this.isDeletingState(object) ? '...' : 'Delete'}
-                                        </Button>
+                                        {
+                                            this.props.onEdit && (
+                                                <Button
+                                                    bsStyle="primary"
+                                                    bsSize="xsmall"
+                                                    onClick={() => this.props.onEdit(object)}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            )
+                                        }
+                                        {
+                                            this.props.onDelete && (
+                                                <Button
+                                                    bsStyle="danger"
+                                                    bsSize="xsmall"
+                                                    onClick={() => this.onDelete(object)}
+                                                >
+                                                    {this.isDeletingState(object) ? '...' : 'Delete'}
+                                                </Button>
+                                            )
+                                        }
                                     </ButtonGroup>
                                 </td>
                             </tr>
                         );
-                    }.bind(this))}
+                    })}
                     </tbody>
                 </Table>
             </div>

@@ -33,8 +33,8 @@ class CompanyForm extends React.Component {
          * @type {{name, email}}
          */
         this.validatorTypes = {
-            name: Joi.string().alphanum().min(3).max(30).required().label('Name'),
-            quota: Joi.number().integer().min(1)
+            name: Joi.string().alphanum().min(3).max(255).required().label('Name'),
+            quota: Joi.number().integer().min(100).max(10000000000000)
         };
     }
 
