@@ -6,94 +6,26 @@ import {
 } from 'react-bootstrap';
 import CustomTable from '../components/Table';
 import UserApi from '../api/UserApi';
-import CompanyApi from './../api/CompanyApi';
 import UserForm from './../forms/UserForm';
+import Format from './../helpers/Format';
+import BasePage from './../components/BasePage';
 
-export default class UserPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModal: false,
-            page: 1,
-            pageCount: 0,
-            list: [],
-            companies: []
-        };
-    }
+export default class UserPage extends BasePage {
 
-    close = () => {
-        this.setState({ showModal: false });
+    deleteEntity = (data) => {
+        return UserApi.remove(data.id);
     };
 
-    open = (object) => {
-        this.setState({
-            showModal: true,
-            entity: object
-        });
+    createEntity = (data) => {
+        return UserApi.create(data);
     };
 
-    componentWillMount = () => {
-        UserApi.getList(1).then((data) => {
-            CompanyApi.getList().then((companies) => {
-                console.log(companies);
-                this.setState({
-                    pageCount: data.pages,
-                    list: data.data,
-                    companies: companies.data
-                });
-            });
-        });
+    updateEntity = (data) => {
+        return UserApi.update(data.id, data);
     };
 
-    delete = (data) => {
-        return UserApi.remove(data.id).then(() => {
-            UserApi.getList(this.state.page).then((data) => {
-                this.setState({
-                    pageCount: data.pages,
-                    list: data.data
-                });
-                this.close();
-            });
-        });
-    };
-
-    onSave = (data) => {
-
-        if (data.id) {
-            return UserApi.update(data.id, data).then((response) => {
-                return UserApi.getList(this.state.page).then((data) => {
-                    this.setState({
-                        pageCount: data.pages,
-                        list: data.data
-                    });
-                    this.close();
-                });
-            });
-        }
-        return UserApi.create(data).then(() => {
-            return UserApi.getList(this.state.page).then((data) => {
-                this.setState({
-                    pageCount: data.pages,
-                    list: data.data
-                });
-                this.close();
-            });
-        })
-    };
-
-
-    /**
-     * Sets next page
-     * @param next
-     */
-    pageChange = (next) => {
-        UserApi.getList(next).then((data) => {
-            this.setState({
-                pageCount: data.pages,
-                list: data.data,
-                page: next
-            });
-        });
+    loadEntityList = (page) => {
+        return UserApi.getList(page);
     };
 
     render() {
@@ -103,7 +35,7 @@ export default class UserPage extends React.Component {
                     Users
                     <Button
                         bsStyle="success"
-                        onClick={() => this.open()}
+                        onClick={() => this.onModalOpen()}
                     >
                         Add
                     </Button>
@@ -112,8 +44,8 @@ export default class UserPage extends React.Component {
                     !!this.state.list.length && (<div>
                         <CustomTable
                             list={this.state.list}
-                            onEdit={this.open}
-                            onDelete={this.delete}
+                            onEdit={this.onModalOpen}
+                            onDelete={this.onDelete}
                             headers={[{
                                 title : 'Name',
                                 index : 'name'
@@ -122,19 +54,20 @@ export default class UserPage extends React.Component {
                                 index : 'email'
                             }, {
                                 title : 'Company',
-                                index : 'company_id'
+                                index : 'company_id',
+                                render : (id) => {return Format.name(id, this.props.companiesList)}
                             }]}/>
                         <Pagination
                             bsSize="medium"
                             items={this.state.pageCount}
                             activePage={this.state.page}
-                            onSelect={this.pageChange}/>
+                            onSelect={this.loadPage}/>
                         <UserForm
                             show={this.state.showModal}
-                            onHide={this.close}
+                            onHide={this.onModalHide}
                             onSave={this.onSave}
                             data={this.state.entity}
-                            companies={this.state.companies}
+                            companies={this.props.companiesList}
                         />
                     </div>)
                 }

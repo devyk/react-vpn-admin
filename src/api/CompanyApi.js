@@ -1,6 +1,9 @@
+import AppConfig from './../config';
+
 export default class CompanyApi {
+
     static getList(page) {
-        let endpoint = 'http://localhost:8201/api/v1/companies';
+        let endpoint = AppConfig.API_URL + '/companies';
         if (page) {
             endpoint += '?page='+page;
         }
@@ -19,7 +22,7 @@ export default class CompanyApi {
     }
 
     static create(data) {
-        return fetch('http://localhost:8201/api/v1/companies', {
+        return fetch(AppConfig.API_URL + '/companies', {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(data),
@@ -32,16 +35,14 @@ export default class CompanyApi {
     }
 
     static remove(id) {
-        return fetch('http://localhost:8201/api/v1/companies/'+id, {
+        return fetch(AppConfig.API_URL + '/companies/'+id, {
             method: 'DELETE',
             mode: 'cors',
-        }).then((response) => {
-            return response
         });
     }
 
     static update(id, data) {
-        return fetch('http://localhost:8201/api/v1/companies/'+id, {
+        return fetch(AppConfig.API_URL + '/companies/'+id, {
             method: 'PUT',
             mode: 'cors',
             body: JSON.stringify(data),

@@ -1,6 +1,9 @@
+import AppConfig from './../config';
+
 export default class UserApi {
+
     static getList(page) {
-        return fetch('http://localhost:8201/api/v1/users?page='+page, {
+        return fetch(AppConfig.API_URL + '/users?page='+page, {
             method: 'GET',
             mode: 'cors',
         }).then((response) => {
@@ -14,7 +17,7 @@ export default class UserApi {
     }
 
     static create(data) {
-        return fetch('http://localhost:8201/api/v1/users', {
+        return fetch(AppConfig.API_URL + '/users', {
             method: 'POST',
             mode: 'cors',
             body: JSON.stringify(data),
@@ -27,16 +30,14 @@ export default class UserApi {
     }
 
     static remove(id) {
-        return fetch('http://localhost:8201/api/v1/users/'+id, {
+        return fetch(AppConfig.API_URL + '/users/'+id, {
             method: 'DELETE',
             mode: 'cors',
-        }).then((response) => {
-            return response
         });
     }
 
     static update(id, data) {
-        return fetch('http://localhost:8201/api/v1/users/'+id, {
+        return fetch(AppConfig.API_URL + '/users/'+id, {
             method: 'PUT',
             mode: 'cors',
             body: JSON.stringify(data),

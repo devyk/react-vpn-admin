@@ -5,7 +5,6 @@ import {
     FormControl,
     Modal,
     Button,
-    HelpBlock,
     InputGroup,
     Glyphicon
 } from 'react-bootstrap';
@@ -13,43 +12,17 @@ import {
 import Joi from 'joi';
 import validation from 'react-validation-mixin';
 import strategy from 'joi-validation-strategy';
+import BaseForm from './../components/BaseForm';
 
-class CompanyForm extends React.Component {
+class CompanyForm extends BaseForm {
 
     constructor(props) {
         super(props);
-
-        /**
-         * Initial state
-         * @type {{data: boolean, save: boolean}}
-         */
-        this.state = {
-            data: false,
-            save : false
-        };
-
-        /**
-         * Validation schema
-         * @type {{name, email}}
-         */
         this.validatorTypes = {
             name: Joi.string().alphanum().min(3).max(255).required().label('Name'),
             quota: Joi.number().integer().min(100).max(10000000000000)
         };
     }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.backup !== nextProps.data) {
-            this.setState({
-                data: {
-                    company_id : 1,
-                    ...nextProps.data,
-                },
-                backup: nextProps.data
-            });
-            this.props.clearValidations();
-        }
-    };
 
     /**
      * Returns field values for validation
@@ -60,47 +33,6 @@ class CompanyForm extends React.Component {
             name: this.state.data.name,
             quota: this.state.data.quota
         };
-    };
-
-    onChange = (event) => {
-        let state = this.state;
-        if (!state.data) {
-            state.data = {};
-        }
-        state.data[event.target.id] = event.target.value;
-        this.setState(state);
-        this.props.validate(event.target.id)
-    };
-
-    onSave = () => {
-        this.setState({ save : true });
-        this.props.onSave(this.state.data).then(() => {
-            this.setState({ save : false });
-        });
-    };
-
-    renderErrorText = (field) => {
-        let message = this.props.getValidationMessages(field);
-        if (message) {
-            return (<HelpBlock>{message[0]}</HelpBlock>);
-        }
-    };
-
-    isValid = (field) => {
-        return this.props.isValid(field) ? 'success' : 'error';
-    };
-
-    isLoading = () => {
-        return this.state.save;
-    };
-
-    onSubmit = (event) => {
-        event.preventDefault();
-        this.props.validate((error) => {
-            if (!error) {
-                this.onSave();
-            }
-        });
     };
 
     render() {

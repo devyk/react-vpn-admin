@@ -1,25 +1,16 @@
-export default class AbuserApi {
-    static generate() {
-        let endpoint = 'http://localhost:8201/api/v1/companies';
-        if (page) {
-            endpoint += '?page='+page;
-        }
+import AppConfig from './../config';
 
-        return fetch(endpoint, {
-            method: 'GET',
+export default class AbuserApi {
+
+    static generate() {
+        return fetch(AppConfig.API_URL + '/companies/generate', {
+            method: 'POST',
             mode: 'cors',
-        }).then((response) => {
-            return response.json().then((data) => {
-                return {
-                    pages: +response.headers.get('X-Pagination-Page-Count'),
-                    data: data
-                }
-            })
         });
     }
 
     static report(date) {
-        return fetch('http://localhost:8201/api/v1/companies/report/' + date, {
+        return fetch(AppConfig.API_URL + '/companies/report/' + date, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

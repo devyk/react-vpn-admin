@@ -8,69 +8,24 @@ import CustomTable from '../components/Table';
 import CompanyApi from './../api/CompanyApi';
 import CompanyForm from './../forms/CompanyForm';
 import Format from './../helpers/Format';
+import BasePage from './../components/BasePage';
 
-export default class CompanyPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModal: false,
-            page: 1,
-            pageCount: 0,
-            list: [],
-            companies: []
-        };
-    }
+export default class CompanyPage extends BasePage {
 
-    close = () => {
-        this.setState({ showModal: false });
+    deleteEntity = (data) => {
+        return CompanyApi.remove(data.id);
     };
 
-    open = (object) => {
-        this.setState({
-            showModal: true,
-            entity: object
-        });
+    createEntity = (data) => {
+        return CompanyApi.create(data);
     };
 
-    componentWillMount = () => {
-        this.loadPage(this.state.page);
+    updateEntity = (data) => {
+        return CompanyApi.update(data.id, data);
     };
 
-    onDelete = (data) => {
-        return CompanyApi.remove(data.id).then(() => {
-            return this.loadPage(this.state.page);
-        }).then(() => {
-            this.close();
-        });
-    };
-
-    onSave = (data) => {
-        if (data.id) {
-            return CompanyApi.update(data.id, data).then(() => {
-                return this.loadPage(this.state.page);
-            }).then(() => {
-                this.close();
-            });
-        }
-        return CompanyApi.create(data).then(() => {
-            return this.loadPage(this.state.page);
-        }).then(() => {
-            this.close();
-        });
-    };
-
-    /**
-     * Sets next page
-     * @param next
-     */
-    loadPage = (next) => {
-        return CompanyApi.getList(next).then((data) => {
-            this.setState({
-                pageCount: data.pages,
-                list: data.data,
-                page: next
-            });
-        });
+    loadEntityList = (page) => {
+        return CompanyApi.getList(page);
     };
 
     render() {
@@ -80,7 +35,7 @@ export default class CompanyPage extends React.Component {
                     Companies
                     <Button
                         bsStyle="success"
-                        onClick={() => this.open()}
+                        onClick={() => this.onModalOpen()}
                     >
                         Add
                     </Button>
@@ -89,7 +44,7 @@ export default class CompanyPage extends React.Component {
                     !!this.state.list.length && (<div>
                         <CustomTable
                         list={this.state.list}
-                        onEdit={this.open}
+                        onEdit={this.onModalOpen}
                         onDelete={this.onDelete}
                         headers={[{
                             title : 'Name',
@@ -106,7 +61,7 @@ export default class CompanyPage extends React.Component {
                             onSelect={this.loadPage}/>
                         <CompanyForm
                             show={this.state.showModal}
-                            onHide={this.close}
+                            onHide={this.onModalHide}
                             onSave={this.onSave}
                             data={this.state.entity}
                             companies={this.state.companies}

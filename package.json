@@ -1,32 +1,25 @@
 {
-  "name": "essential-react",
-  "version": "0.5.0",
-  "description": "A minimal skeleton for building testable React apps using Babel",
+  "name": "react-vpn-admin",
+  "version": "0.0.1",
+  "description": "A minimal admin panel for managing fake vpn log",
   "main": "src/main.js",
   "scripts": {
     "postinstall": "npm run build",
     "server": "node start.js",
     "build": "webpack -p --progress --config webpack.production.config.js",
-    "test": "nyc ava --fail-fast --verbose --require babel-register",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm build/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pheuter/essential-react.git"
+    "url": "https://github.com/devyk/react-vpn-admin.git"
   },
   "keywords": [
-    "skeleton",
+    "admin",
     "template",
-    "react",
-    "quickstart"
+    "vpn"
   ],
-  "author": "Mark Fayngersh",
+  "author": "Yaroslav Khortiuk",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pheuter/essential-react/issues"
-  },
-  "homepage": "https://github.com/pheuter/essential-react",
   "devDependencies": {
     "autoprefixer": "^6.0.2",
     "ava": "^0.12.0",
@@ -40,6 +33,7 @@
     "css-loader": "^0.18.0",
     "enzyme": "^2.0.0",
     "extract-text-webpack-plugin": "^0.8.2",
+    "json-loader": "^0.5.4",
     "nyc": "^5.6.0",
     "postcss-loader": "^0.6.0",
     "postcss-nested": "^1.0.0",
@@ -61,7 +55,6 @@
     "react-bootstrap": "^0.30.8",
     "react-datepicker": "^0.44.0",
     "react-dom": "^15.0.1",
-    "react-router": "^2.0.0",
     "react-validation-mixin": "^5.4.0"
   }
 }

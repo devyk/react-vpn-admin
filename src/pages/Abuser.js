@@ -2,7 +2,6 @@ import React from 'react';
 import {
     PageHeader,
     Button,
-    Pagination,
     ButtonGroup
 } from 'react-bootstrap';
 import CustomTable from '../components/Table';
@@ -18,11 +17,12 @@ export default class AbuserPage extends React.Component {
         this.state = {
             list: [],
             startDate: Moment(),
-            loadingReport: false
+            loadingReport: false,
+            generatingData: false,
         };
     }
 
-    handleChange = (date) => {
+    handleDateChange = (date) => {
         this.setState({startDate: date});
     };
 
@@ -33,6 +33,13 @@ export default class AbuserPage extends React.Component {
                 list: data,
                 loadingReport: false
             });
+        });
+    };
+
+    handleGenerate = () => {
+        this.setState({generatingData: true});
+        return AbuserApi.generate().then((response) => {
+            this.setState({generatingData: false});
         });
     };
 
@@ -51,7 +58,7 @@ export default class AbuserPage extends React.Component {
                     Abusers
                     <DatePicker
                         selected={this.state.startDate}
-                        onChange={this.handleChange}
+                        onChange={this.handleDateChange}
                         customInput={<button>{this.getFormatedDate()}</button>}
                         filterDate={this.isFirstDayOfTheMonth}
                         showMonthDropdown
@@ -66,9 +73,10 @@ export default class AbuserPage extends React.Component {
                         </Button>
                         <Button
                             bsStyle="danger"
-                            onClick={() => this.open()}
+                            onClick={this.handleGenerate}
+                            disabled={this.state.generatingData}
                         >
-                            Generate
+                            {this.state.generatingData ? '...' : 'Generate'}
                         </Button>
                     </ButtonGroup>
                 </PageHeader>
