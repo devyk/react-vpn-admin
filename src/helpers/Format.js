@@ -9,7 +9,7 @@ export default class Format
         if (value < 500000000000) {
             return value + ' bytes'
         }
-        return (value/1000000000000).toPrecision(2) + ' TB'
+        return (value/1000000000000).toFixed(2) + ' TB'
     }
 
     /**

@@ -21,7 +21,7 @@ class UserForm extends BaseForm {
          * @type {{name, email}}
          */
         this.validatorTypes = {
-            name: Joi.string().alphanum().min(3).max(30).required().label('Name'),
+            name: Joi.string().trim().min(3).max(255).required().label('Name'),
             email: Joi.string().email().required().label('Email')
         };
     }
@@ -52,7 +52,7 @@ class UserForm extends BaseForm {
                                          label="Text"
                                          value={this.state.data ? this.state.data.name : ''}
                                          onChange={this.onChange}
-                                         placeholder="Enter text"/>
+                                         placeholder="Enter name"/>
                             {this.renderErrorText('name')}
                         </FormGroup>
                         <FormGroup validationState={this.isValid('email')}>
@@ -62,7 +62,7 @@ class UserForm extends BaseForm {
                                          label="email"
                                          value={this.state.data ? this.state.data.email : ''}
                                          onChange={this.onChange}
-                                         placeholder="Enter text"/>
+                                         placeholder="Enter email"/>
                             {this.renderErrorText('email')}
                         </FormGroup>
                         <FormGroup  validationState={'success'}>

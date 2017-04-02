@@ -19,8 +19,8 @@ class CompanyForm extends BaseForm {
     constructor(props) {
         super(props);
         this.validatorTypes = {
-            name: Joi.string().alphanum().min(3).max(255).required().label('Name'),
-            quota: Joi.number().integer().min(100).max(10000000000000)
+            name: Joi.string().trim().min(3).max(255).required().label('Name'),
+            quota: Joi.number().integer().min(100).max(10000000000000).required().label('Quota')
         };
     }
 
@@ -50,7 +50,7 @@ class CompanyForm extends BaseForm {
                                          label="Text"
                                          value={this.state.data ? this.state.data.name : ''}
                                          onChange={this.onChange}
-                                         placeholder="Enter text"/>
+                                         placeholder="Enter company name"/>
                             {this.renderErrorText('name')}
                         </FormGroup>
                         <FormGroup validationState={this.isValid('quota')}>
@@ -61,7 +61,7 @@ class CompanyForm extends BaseForm {
                                              label="quota"
                                              value={this.state.data ? this.state.data.quota : ''}
                                              onChange={this.onChange}
-                                             placeholder="Enter company quota"/>
+                                             placeholder="Enter company quota in bytes"/>
                                 <InputGroup.Addon>
                                     <Glyphicon glyph="fire" />
                                 </InputGroup.Addon>
